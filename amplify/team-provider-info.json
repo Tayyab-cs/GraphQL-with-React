@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-myonlinestore-dev-5963d-authRole",
+      "UnauthRoleArn": "arn:aws:iam::495519560431:role/amplify-myonlinestore-dev-5963d-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::495519560431:role/amplify-myonlinestore-dev-5963d-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-myonlinestore-dev-5963d-deployment",
+      "UnauthRoleName": "amplify-myonlinestore-dev-5963d-unauthRole",
+      "StackName": "amplify-myonlinestore-dev-5963d",
+      "StackId": "arn:aws:cloudformation:us-east-1:495519560431:stack/amplify-myonlinestore-dev-5963d/5e7bd5d0-dd20-11ee-aa6b-122b7d23f8ab",
+      "AmplifyAppId": "d2v6rurth6m6fw"
+    },
+    "categories": {
+      "api": {
+        "myonlinestore": {}
+      }
+    }
+  }
+}
