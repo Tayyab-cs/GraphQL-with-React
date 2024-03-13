@@ -1,5 +1,6 @@
 {
   "AppSyncApiName": "myonlinestore",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthModeLastUpdated": "2024-03-13T07:26:48.688Z"
 }

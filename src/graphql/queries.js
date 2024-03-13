@@ -6,6 +6,8 @@ export const getBlog = /* GraphQL */ `
     getBlog(id: $id) {
       id
       name
+      description
+      type
       posts {
         nextToken
         __typename
@@ -26,6 +28,8 @@ export const listBlogs = /* GraphQL */ `
       items {
         id
         name
+        description
+        type
         createdAt
         updatedAt
         __typename
@@ -43,6 +47,8 @@ export const getPost = /* GraphQL */ `
       blog {
         id
         name
+        description
+        type
         createdAt
         updatedAt
         __typename
@@ -111,6 +117,35 @@ export const listComments = /* GraphQL */ `
         createdAt
         updatedAt
         postCommentsId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const blogsByType = /* GraphQL */ `
+  query BlogsByType(
+    $type: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelBlogFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    blogsByType(
+      type: $type
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        description
+        type
+        createdAt
+        updatedAt
         __typename
       }
       nextToken

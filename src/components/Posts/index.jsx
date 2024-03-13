@@ -17,11 +17,23 @@ const columns = [
     dataIndex: "title",
     key: "title",
   },
+  // {
+  //   title: "Blog Id",
+  //   dataIndex: "blogId",
+  //   key: "blogId",
+  // },
+  // {
+  //   title: "Blog Name",
+  //   dataIndex: "blogName",
+  //   key: "blogName",
+  // },
 ];
 
 const Posts = () => {
   const [id, setId] = useState("");
   const [title, setTitle] = useState("");
+  const [blogId, setBlogId] = useState("");
+  const [blogName, setBlogName] = useState("");
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -54,14 +66,14 @@ const Posts = () => {
           id: id,
           title: title,
           // blog: {
-          //   id: 1,
-          //   name: "asd",
+          //   id: blogId,
+          //   name: blogName,
           // },
         },
       },
     });
 
-    console.log("post: ", res);
+    console.log("post created: ", res);
   };
 
   const handlePostUpdate = async () => {
@@ -96,21 +108,46 @@ const Posts = () => {
       <h1>POSTS</h1>
 
       <div>
-        <h3>Id: </h3>
-        <input
-          placeholder="id"
-          value={id}
-          onChange={(e) => setId(e.target.value)}
-        />
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <h3>Id: </h3>
+          <input
+            placeholder="id"
+            value={id}
+            onChange={(e) => setId(e.target.value)}
+          />
 
-        <h3>Title: </h3>
-        <input
-          placeholder="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+          <h3>Title: </h3>
+          <input
+            placeholder="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <h3>Blog Id: </h3>
+          <input
+            placeholder="id"
+            value={blogId}
+            onChange={(e) => setBlogId(e.target.value)}
+          />
+          <h3>Blog Name: </h3>
+          <input
+            placeholder="blog name"
+            value={blogName}
+            onChange={(e) => setBlogName(e.target.value)}
+          />
+        </div>
       </div>
-      <div style={{ padding: "10px 0px" }}>
+
+      <div
+        style={{
+          padding: "10px 0px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "5px",
+        }}
+      >
         <button onClick={handlePostCreate}>save</button>
         <button onClick={handlePostUpdate}>update</button>
         <button onClick={handlePostDelete}>delete</button>
@@ -120,7 +157,14 @@ const Posts = () => {
         <h2>Posts Table</h2>
         <Table
           dataSource={posts.map((item, index) => {
-            return { id: item.id, title: item.title, key: index };
+            console.log("post with blogs: ", item);
+            return {
+              key: index,
+              id: item.id,
+              title: item.title,
+              // blogId: item.blog.id,
+              // blogName: item.blog.name,
+            };
           })}
           columns={columns}
         />
