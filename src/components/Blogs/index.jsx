@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
-import { blogsByType, getBlog, listBlogs } from "../../graphql/queries.js";
+import {
+  blogsByType,
+  dataByCategory,
+  getBlog,
+  listBlogs,
+} from "../../graphql/queries.js";
 import { generateClient } from "aws-amplify/api";
 import { createBlog, deleteBlog, updateBlog } from "../../graphql/mutations.js";
-import { Table } from "antd";
+import { Select, Table } from "antd";
 import * as subscriptions from "../../graphql/subscriptions.js";
 
 const API = generateClient();
@@ -28,6 +33,11 @@ const columns = [
     dataIndex: "type",
     key: "type",
   },
+  {
+    title: "Category",
+    dataIndex: "cat",
+    key: "category",
+  },
 ];
 
 const Blogs = () => {
@@ -35,8 +45,10 @@ const Blogs = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [type, setType] = useState("");
+  const [cat, setCat] = useState("");
   const [blogs, setBlogs] = useState([]);
   const [search, setSearch] = useState("");
+  const [selectCat, setSelectCat] = useState("");
 
   console.log("search: ", search);
 
@@ -87,15 +99,16 @@ const Blogs = () => {
   };
 
   useEffect(() => {
-    if (search) {
-      if (!isNaN(search)) {
-        handleBlogById();
-      } else {
-        handleBlogByType();
-      }
+    if (search && selectCat) {
+      handleBlogByCategory();
+    } else if (search && !isNaN(search)) {
+      handleBlogById();
+    } else if (search) {
+      handleBlogByType();
+    } else {
+      fetchBlogs();
     }
-    fetchBlogs();
-  }, [id, search]);
+  }, [search, selectCat]);
 
   const handleBlogById = async () => {
     const res = await API.graphql({
@@ -121,6 +134,19 @@ const Blogs = () => {
     setBlogs(res.data.blogsByType.items);
   };
 
+  const handleBlogByCategory = async () => {
+    const res = await API.graphql({
+      query: dataByCategory,
+      variables: {
+        name: { eq: search },
+        cat: selectCat,
+      },
+    });
+
+    console.log("blogs by category or name: ", res);
+    setBlogs(res.data.dataByCategory.items);
+  };
+
   const handleBlogCreate = async () => {
     try {
       const res = await API.graphql({
@@ -131,6 +157,7 @@ const Blogs = () => {
             name: name,
             description: description,
             type: type,
+            cat: cat,
           },
         },
       });
@@ -219,6 +246,14 @@ const Blogs = () => {
             onChange={(e) => setType(e.target.value)}
           />
         </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <h3>Category</h3>
+          <input
+            placeholder="cat"
+            value={cat}
+            onChange={(e) => setCat(e.target.value)}
+          />
+        </div>
       </div>
       <div
         style={{
@@ -248,6 +283,36 @@ const Blogs = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
+
+          <h3>Category:</h3>
+          <Select
+            // defaultValue="game"
+            placeholder="category"
+            style={{
+              width: 120,
+            }}
+            onChange={(value) => {
+              setSelectCat(value);
+            }}
+            options={[
+              {
+                value: "game",
+                label: "game",
+              },
+              {
+                value: "video",
+                label: "video",
+              },
+              {
+                value: "movie",
+                label: "movie",
+              },
+              {
+                value: "food",
+                label: "food",
+              },
+            ]}
+          />
         </div>
         <h2>Blogs Table</h2>
         <Table
@@ -258,6 +323,7 @@ const Blogs = () => {
               name: item.name,
               description: item.description,
               type: item.type,
+              cat: item.cat,
             };
           })}
           columns={columns}

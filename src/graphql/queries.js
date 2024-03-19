@@ -8,6 +8,7 @@ export const getBlog = /* GraphQL */ `
       name
       description
       type
+      cat
       posts {
         nextToken
         __typename
@@ -30,6 +31,7 @@ export const listBlogs = /* GraphQL */ `
         name
         description
         type
+        cat
         createdAt
         updatedAt
         __typename
@@ -49,6 +51,7 @@ export const getPost = /* GraphQL */ `
         name
         description
         type
+        cat
         createdAt
         updatedAt
         __typename
@@ -144,6 +147,39 @@ export const blogsByType = /* GraphQL */ `
         name
         description
         type
+        cat
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const dataByCategory = /* GraphQL */ `
+  query DataByCategory(
+    $cat: String!
+    $name: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelBlogFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    dataByCategory(
+      cat: $cat
+      name: $name
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        description
+        type
+        cat
         createdAt
         updatedAt
         __typename

@@ -11,6 +11,7 @@ export const createBlog = /* GraphQL */ `
       name
       description
       type
+      cat
       posts {
         nextToken
         __typename
@@ -31,6 +32,7 @@ export const updateBlog = /* GraphQL */ `
       name
       description
       type
+      cat
       posts {
         nextToken
         __typename
@@ -51,6 +53,7 @@ export const deleteBlog = /* GraphQL */ `
       name
       description
       type
+      cat
       posts {
         nextToken
         __typename
@@ -74,6 +77,7 @@ export const createPost = /* GraphQL */ `
         name
         description
         type
+        cat
         createdAt
         updatedAt
         __typename
@@ -102,6 +106,7 @@ export const updatePost = /* GraphQL */ `
         name
         description
         type
+        cat
         createdAt
         updatedAt
         __typename
@@ -130,6 +135,7 @@ export const deletePost = /* GraphQL */ `
         name
         description
         type
+        cat
         createdAt
         updatedAt
         __typename

@@ -17,16 +17,31 @@ const columns = [
     dataIndex: "title",
     key: "title",
   },
-  // {
-  //   title: "Blog Id",
-  //   dataIndex: "blogId",
-  //   key: "blogId",
-  // },
-  // {
-  //   title: "Blog Name",
-  //   dataIndex: "blogName",
-  //   key: "blogName",
-  // },
+  {
+    title: "Blog Id",
+    dataIndex: "blogId",
+    key: "blogId",
+  },
+  {
+    title: "Blog Name",
+    dataIndex: "blogName",
+    key: "blogName",
+  },
+  {
+    title: "Blog Description",
+    dataIndex: "blogDescription",
+    key: "blogDescription",
+  },
+  {
+    title: "Blog Type",
+    dataIndex: "blogType",
+    key: "blogType",
+  },
+  {
+    title: "Blog Post ID",
+    dataIndex: "blogPostId",
+    key: "blogPostId",
+  },
 ];
 
 const Posts = () => {
@@ -34,6 +49,9 @@ const Posts = () => {
   const [title, setTitle] = useState("");
   const [blogId, setBlogId] = useState("");
   const [blogName, setBlogName] = useState("");
+  const [blogDescription, setBlogDescription] = useState("");
+  const [blogType, setBlogType] = useState("");
+  const [blogPostId, setBlogPostId] = useState("");
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -65,10 +83,13 @@ const Posts = () => {
         input: {
           id: id,
           title: title,
-          // blog: {
-          //   id: blogId,
-          //   name: blogName,
-          // },
+          blog: {
+            id: blogId,
+            name: blogName,
+            description: blogDescription,
+            type: blogType,
+          },
+          blogPostsId: blogPostId,
         },
       },
     });
@@ -137,6 +158,28 @@ const Posts = () => {
             onChange={(e) => setBlogName(e.target.value)}
           />
         </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <h3>Blog Description: </h3>
+          <input
+            placeholder="blog description"
+            value={blogDescription}
+            onChange={(e) => setBlogDescription(e.target.value)}
+          />
+          <h3>Blog Type: </h3>
+          <input
+            placeholder="blog type"
+            value={blogType}
+            onChange={(e) => setBlogType(e.target.value)}
+          />
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <h3>Blog Posts ID: </h3>
+          <input
+            placeholder="blog post ID"
+            value={blogPostId}
+            onChange={(e) => setBlogPostId(e.target.value)}
+          />
+        </div>
       </div>
 
       <div
@@ -162,8 +205,11 @@ const Posts = () => {
               key: index,
               id: item.id,
               title: item.title,
-              // blogId: item.blog.id,
-              // blogName: item.blog.name,
+              blogId: item.blog.id ?? "",
+              blogName: item.blog.name ?? "",
+              blogDescription: item.blog.description ?? "",
+              blogType: item.blog.type ?? "",
+              blogPostId: item.blogPostsId ?? "",
             };
           })}
           columns={columns}

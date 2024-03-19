@@ -8,6 +8,7 @@ export const onCreateBlog = /* GraphQL */ `
       name
       description
       type
+      cat
       posts {
         nextToken
         __typename
@@ -25,6 +26,7 @@ export const onUpdateBlog = /* GraphQL */ `
       name
       description
       type
+      cat
       posts {
         nextToken
         __typename
@@ -42,6 +44,7 @@ export const onDeleteBlog = /* GraphQL */ `
       name
       description
       type
+      cat
       posts {
         nextToken
         __typename
@@ -62,6 +65,7 @@ export const onCreatePost = /* GraphQL */ `
         name
         description
         type
+        cat
         createdAt
         updatedAt
         __typename
@@ -87,6 +91,7 @@ export const onUpdatePost = /* GraphQL */ `
         name
         description
         type
+        cat
         createdAt
         updatedAt
         __typename
@@ -112,6 +117,7 @@ export const onDeletePost = /* GraphQL */ `
         name
         description
         type
+        cat
         createdAt
         updatedAt
         __typename

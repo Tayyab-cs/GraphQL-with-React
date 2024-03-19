@@ -8,6 +8,12 @@ type Blog @model {
   name: String!
   description: String!
   type: String! @index
+  cat: String!
+    @index(
+      name: "byCategory"
+      queryField: "dataByCategory"
+      sortKeyFields: ["name"]
+    )
   posts: [Post] @hasMany
 }
 
