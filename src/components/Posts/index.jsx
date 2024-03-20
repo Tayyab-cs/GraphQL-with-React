@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { generateClient } from "aws-amplify/api";
-import { getPost, listPosts } from "../../graphql/queries.js";
+import { getPost, listPosts, postByCategory } from "../../graphql/queries.js";
 import { createPost, deletePost, updatePost } from "../../graphql/mutations.js";
-import { Table } from "antd";
+import { Input, Select, Table } from "antd";
 
 const API = generateClient();
 
@@ -18,52 +18,88 @@ const columns = [
     key: "title",
   },
   {
-    title: "Blog Id",
-    dataIndex: "blogId",
-    key: "blogId",
+    title: "Type",
+    dataIndex: "type",
+    key: "type",
   },
   {
-    title: "Blog Name",
-    dataIndex: "blogName",
-    key: "blogName",
+    title: "Category",
+    dataIndex: "cat",
+    key: "cat",
+  },
+];
+
+const typeOptions = [
+  {
+    value: "public",
+    label: "Public",
   },
   {
-    title: "Blog Description",
-    dataIndex: "blogDescription",
-    key: "blogDescription",
+    value: "private",
+    label: "Private",
+  },
+];
+
+const catOptions = [
+  {
+    value: "game",
+    label: "game",
   },
   {
-    title: "Blog Type",
-    dataIndex: "blogType",
-    key: "blogType",
+    value: "video",
+    label: "video",
   },
   {
-    title: "Blog Post ID",
-    dataIndex: "blogPostId",
-    key: "blogPostId",
+    value: "movie",
+    label: "movie",
+  },
+  {
+    value: "food",
+    label: "food",
   },
 ];
 
 const Posts = () => {
   const [id, setId] = useState("");
   const [title, setTitle] = useState("");
-  const [blogId, setBlogId] = useState("");
-  const [blogName, setBlogName] = useState("");
-  const [blogDescription, setBlogDescription] = useState("");
-  const [blogType, setBlogType] = useState("");
-  const [blogPostId, setBlogPostId] = useState("");
+  const [type, setType] = useState("");
+  const [cat, setCat] = useState("");
   const [posts, setPosts] = useState([]);
+  const [searchTitle, setSearchTitle] = useState("");
+  const [selectType, setSelectType] = useState("");
+  const [selectCat, setSelectCat] = useState("");
+
+  const fetchPosts = async () => {
+    const res = await API.graphql({
+      query: listPosts,
+    });
+    setPosts(res.data.listPosts.items);
+    console.log("Posts: ", res.data.listPosts.items);
+  };
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      const res = await API.graphql({
-        query: listPosts,
-      });
-      setPosts(res.data.listPosts.items);
-      console.log("Posts: ", res.data.listPosts.items);
-    };
+    console.log("title, type: ", searchTitle, selectType);
+    if (searchTitle && selectType) {
+      handlePostsbyCategory();
+    }
     fetchPosts();
-  }, []);
+  }, [selectCat, searchTitle, selectType]);
+
+  const handlePostsbyCategory = async () => {
+    const res = await API.graphql({
+      query: postByCategory,
+      variables: {
+        cat: selectCat,
+        titleType: { eq: { title: searchTitle, type: selectType } },
+        // titleType: { title: { eq: searchTitle }, type: { eq: selectType } },
+        sortDirection: "ASC",
+      },
+    });
+
+    console.log("posts by category: ", res);
+
+    if (res) setPosts(res.data.postByCategory.items);
+  };
 
   const handlePostById = async () => {
     const res = await API.graphql({
@@ -83,18 +119,15 @@ const Posts = () => {
         input: {
           id: id,
           title: title,
-          blog: {
-            id: blogId,
-            name: blogName,
-            description: blogDescription,
-            type: blogType,
-          },
-          blogPostsId: blogPostId,
+          type: type,
+          cat: cat,
         },
       },
     });
 
     console.log("post created: ", res);
+
+    if (res) fetchPosts();
   };
 
   const handlePostUpdate = async () => {
@@ -145,39 +178,17 @@ const Posts = () => {
           />
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <h3>Blog Id: </h3>
+          <h3>Type: </h3>
           <input
-            placeholder="id"
-            value={blogId}
-            onChange={(e) => setBlogId(e.target.value)}
+            placeholder="type"
+            value={type}
+            onChange={(e) => setType(e.target.value)}
           />
-          <h3>Blog Name: </h3>
+          <h3>category:</h3>
           <input
-            placeholder="blog name"
-            value={blogName}
-            onChange={(e) => setBlogName(e.target.value)}
-          />
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <h3>Blog Description: </h3>
-          <input
-            placeholder="blog description"
-            value={blogDescription}
-            onChange={(e) => setBlogDescription(e.target.value)}
-          />
-          <h3>Blog Type: </h3>
-          <input
-            placeholder="blog type"
-            value={blogType}
-            onChange={(e) => setBlogType(e.target.value)}
-          />
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <h3>Blog Posts ID: </h3>
-          <input
-            placeholder="blog post ID"
-            value={blogPostId}
-            onChange={(e) => setBlogPostId(e.target.value)}
+            placeholder="category"
+            value={cat}
+            onChange={(e) => setCat(e.target.value)}
           />
         </div>
       </div>
@@ -196,6 +207,45 @@ const Posts = () => {
         <button onClick={handlePostDelete}>delete</button>
       </div>
 
+      <div
+        style={{
+          padding: "10px 0px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "5px",
+        }}
+      >
+        <Input
+          placeholder="select title"
+          value={searchTitle}
+          style={{
+            width: 120,
+          }}
+          onChange={(e) => setSearchTitle(e.target.value)}
+        />
+        <Select
+          // defaultValue="lucy"
+          placeholder="select type"
+          style={{
+            width: 120,
+          }}
+          onChange={(value) => setSelectType(value)}
+          options={typeOptions}
+        />
+
+        <Select
+          placeholder="category"
+          style={{
+            width: 120,
+          }}
+          onChange={(value) => {
+            setSelectCat(value);
+          }}
+          options={catOptions}
+        />
+      </div>
+
       <div style={{ padding: "10px 0px" }}>
         <h2>Posts Table</h2>
         <Table
@@ -205,11 +255,8 @@ const Posts = () => {
               key: index,
               id: item.id,
               title: item.title,
-              blogId: item.blog.id ?? "",
-              blogName: item.blog.name ?? "",
-              blogDescription: item.blog.description ?? "",
-              blogType: item.blog.type ?? "",
-              blogPostId: item.blogPostsId ?? "",
+              type: item.type ?? "",
+              cat: item.cat ?? "",
             };
           })}
           columns={columns}

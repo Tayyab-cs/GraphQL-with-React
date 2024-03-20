@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   blogsByType,
-  dataByCategory,
+  blogByCategory,
   getBlog,
   listBlogs,
 } from "../../graphql/queries.js";
@@ -136,7 +136,7 @@ const Blogs = () => {
 
   const handleBlogByCategory = async () => {
     const res = await API.graphql({
-      query: dataByCategory,
+      query: blogByCategory,
       variables: {
         name: { eq: search },
         cat: selectCat,
@@ -144,7 +144,7 @@ const Blogs = () => {
     });
 
     console.log("blogs by category or name: ", res);
-    setBlogs(res.data.dataByCategory.items);
+    setBlogs(res.data.blogByCategory.items);
   };
 
   const handleBlogCreate = async () => {

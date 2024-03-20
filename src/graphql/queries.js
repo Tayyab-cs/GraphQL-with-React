@@ -46,6 +46,8 @@ export const getPost = /* GraphQL */ `
     getPost(id: $id) {
       id
       title
+      type
+      cat
       blog {
         id
         name
@@ -77,6 +79,8 @@ export const listPosts = /* GraphQL */ `
       items {
         id
         title
+        type
+        cat
         createdAt
         updatedAt
         blogPostsId
@@ -94,6 +98,8 @@ export const getComment = /* GraphQL */ `
       post {
         id
         title
+        type
+        cat
         createdAt
         updatedAt
         blogPostsId
@@ -157,8 +163,8 @@ export const blogsByType = /* GraphQL */ `
     }
   }
 `;
-export const dataByCategory = /* GraphQL */ `
-  query DataByCategory(
+export const blogByCategory = /* GraphQL */ `
+  query BlogByCategory(
     $cat: String!
     $name: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
@@ -166,7 +172,7 @@ export const dataByCategory = /* GraphQL */ `
     $limit: Int
     $nextToken: String
   ) {
-    dataByCategory(
+    blogByCategory(
       cat: $cat
       name: $name
       sortDirection: $sortDirection
@@ -182,6 +188,38 @@ export const dataByCategory = /* GraphQL */ `
         cat
         createdAt
         updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const postByCategory = /* GraphQL */ `
+  query PostByCategory(
+    $cat: String!
+    $titleType: ModelPostByCategoryCompositeKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelPostFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    postByCategory(
+      cat: $cat
+      titleType: $titleType
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        type
+        cat
+        createdAt
+        updatedAt
+        blogPostsId
         __typename
       }
       nextToken

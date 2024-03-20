@@ -60,6 +60,8 @@ export const onCreatePost = /* GraphQL */ `
     onCreatePost(filter: $filter) {
       id
       title
+      type
+      cat
       blog {
         id
         name
@@ -86,6 +88,8 @@ export const onUpdatePost = /* GraphQL */ `
     onUpdatePost(filter: $filter) {
       id
       title
+      type
+      cat
       blog {
         id
         name
@@ -112,6 +116,8 @@ export const onDeletePost = /* GraphQL */ `
     onDeletePost(filter: $filter) {
       id
       title
+      type
+      cat
       blog {
         id
         name
@@ -140,6 +146,8 @@ export const onCreateComment = /* GraphQL */ `
       post {
         id
         title
+        type
+        cat
         createdAt
         updatedAt
         blogPostsId
@@ -160,6 +168,8 @@ export const onUpdateComment = /* GraphQL */ `
       post {
         id
         title
+        type
+        cat
         createdAt
         updatedAt
         blogPostsId
@@ -180,6 +190,8 @@ export const onDeleteComment = /* GraphQL */ `
       post {
         id
         title
+        type
+        cat
         createdAt
         updatedAt
         blogPostsId

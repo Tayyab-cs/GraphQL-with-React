@@ -11,7 +11,7 @@ type Blog @model {
   cat: String!
     @index(
       name: "byCategory"
-      queryField: "dataByCategory"
+      queryField: "blogByCategory"
       sortKeyFields: ["name"]
     )
   posts: [Post] @hasMany
@@ -20,6 +20,13 @@ type Blog @model {
 type Post @model {
   id: ID!
   title: String!
+  type: String!
+  cat: String!
+    @index(
+      name: "byCategory"
+      queryField: "postByCategory"
+      sortKeyFields: ["title", "type"]
+    )
   blog: Blog @belongsTo
   comments: [Comment] @hasMany
 }
